@@ -28,8 +28,10 @@ onMounted(async () => {
         <div class="modal">
             <span class="modal-title">后端配置验证器</span>
             <span v-if="wait_backend_ack">正在验证后端配置...</span>
-            <span v-if="backend_is_ok">后端配置成功, 正在加载...</span>
-            <span v-if="!backend_is_ok">后端返回了错误: {{ backend_error }}</span>
+            <div v-else>
+                <span v-if="backend_is_ok">后端配置成功, 正在加载...</span>
+                <span v-else>后端返回了错误: {{ backend_error }}</span>
+            </div>
         </div>
     </div>
     <router-view v-if="backend_is_ok" />
