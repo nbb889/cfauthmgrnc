@@ -9,5 +9,12 @@
     },
     "build": {
         "command": "npm install && cd web && npm install && npm run build"
-    }
+    },
+    "kv_namespaces": [
+        {
+            "binding": "data",
+            "id": "70924e0c4ef74e8d91fa4ae45c6f7be7",
+            "remote": true
+        }
+    ]
 }
