@@ -16,7 +16,22 @@ app.use((req, res, next) => {
 import cookieParser from 'cookie-parser'
 app.use(cookieParser())
 
-import { createServer } from 'node:http'
+const api = express.Router()
+app.use('/api', api)
+
+import { getenv } from './cfenv.js'
+api.use((req, res, next) => {
+    const env = getenv()
+    if (typeof env.password !== 'string') return res.status(500).send('密码未设置')
+    if (typeof env.data === 'undefined') return res.status(500).send('存储未绑定')
+    return next()
+})
+
+api.get('/ping', (req, res) => {
+    return res.status(200).send('pong')
+})
+
+import { createServer, get } from 'node:http'
 import { httpServerHandler } from 'cloudflare:node'
 const server = createServer(app)
 export default httpServerHandler(server)
