@@ -1,0 +1,13 @@
+{
+    "name": "authmgr",
+    "main": "src/app.js",
+    "compatibility_date": "2026-06-02",
+    "compatibility_flags": ["nodejs_compat"],
+    "assets": {
+        "directory": "./web/dist/",
+        "binding": "assets"
+    },
+    "build": {
+        "command": "npm install && cd web && npm install && npm run build"
+    }
+}
