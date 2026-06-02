@@ -24,7 +24,8 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="container">
+    <router-view v-if="backend_is_ok" />
+    <div v-else class="container">
         <div class="modal">
             <span class="modal-title">后端配置验证器</span>
             <span v-if="wait_backend_ack">正在验证后端配置...</span>
@@ -34,7 +35,6 @@ onMounted(async () => {
             </div>
         </div>
     </div>
-    <router-view v-if="backend_is_ok" />
 </template>
 
 <style scoped>
