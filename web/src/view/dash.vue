@@ -1,7 +1,7 @@
 <script setup>
 document.title = '管理面板'
 
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import toast from '@/toast.js'
 
@@ -17,6 +17,15 @@ const filtered_accounts = computed(() => {
     if (!filter.value.trim()) return accounts.value
     const keyword = filter.value.toLowerCase()
     return accounts.value.filter(account => account.toLowerCase().includes(keyword))
+})
+
+const in_editor = ref(false)
+const form_name = ref('')
+const form_data = reactive({
+    username: '',
+    password: '',
+    totp: '',
+    note: ''
 })
 
 const logout = async () => {
@@ -47,6 +56,38 @@ const fetch_account_info = async (event, account) => {
     console.log(event, account)
 }
 
+const set_account_info = async () => {
+    loading.value = true
+
+    const resp = await fetch(`/api/account/set?name=${form_name.value}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        body: JSON.stringify(form_data)
+    })
+
+    toast(await resp.text())
+    loading.value = false
+
+    if (resp.ok) {
+        in_editor.value = false
+        await refresh()
+    }
+}
+
+const add_account = () => {
+    form_name.value = ''
+    Object.assign(form_data, {
+        username: '',
+        password: '',
+        totp: '',
+        note: ''
+    })
+
+    in_editor.value = true
+}
+
 const refresh = async () => {
     accounts.value = []
     havemore.value = false
@@ -55,12 +96,47 @@ const refresh = async () => {
 }
 
 onMounted(refresh)
+
+import modal from '@/components/modal.vue'
 </script>
 
 <template>
-    <div v-loading="loading" id="container">
+    <modal v-if="in_editor">
+        <template #title>
+            <span>配置编辑器</span>
+        </template>
+        <template #content>
+            <form id="form" v-loading="loading">
+                <div>
+                    <label for="name">配置名称</label>
+                    <input type="text" id="name" v-model="form_name" />
+                </div>
+                <div>
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" v-model="form_data.username" />
+                </div>
+                <div>
+                    <label for="password">密码</label>
+                    <input type="text" id="password" v-model="form_data.password" />
+                </div>
+                <div>
+                    <label for="totp">TOTP (可选)</label>
+                    <input type="text" id="totp" v-model="form_data.totp" />
+                </div>
+                <div>
+                    <label for="note">备注 (可选)</label>
+                    <input type="text" id="note" v-model="form_data.note" />
+                </div>
+                <div id="form-btns">
+                    <button type="button" @click="in_editor = false">取消</button>
+                    <button type="button" @click="set_account_info">完成</button>
+                </div>
+            </form>
+        </template>
+    </modal>
+    <div v-show="!in_editor" v-loading="loading" id="container">
         <div id="top-btns">
-            <button type="button">添加账号</button>
+            <button type="button" @click="add_account">添加账号</button>
             <button type="button" @click="refresh">刷新</button>
             <div class="whitespace" />
             <input type="text" placeholder="查找" v-model="filter" />
@@ -95,6 +171,22 @@ onMounted(refresh)
 }
 
 #top-btns .whitespace {
+    flex: 1;
+}
+
+#form input {
+    float: right;
+}
+
+#form-btns {
+    width: 100%;
+    margin: 2px 0;
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+}
+
+#form-btns button {
     flex: 1;
 }
 
