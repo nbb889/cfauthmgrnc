@@ -20,27 +20,35 @@ const logout = async () => {
 </script>
 
 <template>
-    <div v-loading="loading" style="padding: 10px">
-        <div id="top-menu">
+    <div v-loading="loading" id="container">
+        <div id="top-btns">
             <button type="button">添加账号</button>
-            <div class="whitespace"></div>
+            <div class="whitespace" />
             <button type="button" @click="logout">登出</button>
         </div>
     </div>
 </template>
 
 <style scoped>
-#top-menu {
+#container {
+    height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    column-gap: 5px;
 }
 
-#top-menu button {
+#top-btns {
+    width: calc(100% - 2 * 5px);
+    margin: 5px;
+    display: flex;
+    align-items: center;
+}
+
+#top-btns button {
     cursor: pointer;
 }
 
-#top-menu .whitespace {
+#top-btns .whitespace {
     flex: 1;
 }
 </style>
