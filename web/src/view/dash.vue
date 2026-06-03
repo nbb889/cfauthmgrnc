@@ -12,6 +12,13 @@ const accounts = ref([])
 const havemore = ref(false)
 const morecursor = ref('')
 
+const filter = ref('')
+const filtered_accounts = computed(() => {
+    if (!filter.value.trim()) return accounts.value
+    const keyword = filter.value.toLowerCase()
+    return accounts.value.filter(account => account.toLowerCase().includes(keyword))
+})
+
 const logout = async () => {
     loading.value = true
 
@@ -22,7 +29,7 @@ const logout = async () => {
     loading.value = false
 }
 
-const fetch_account = async () => {
+const fetch_account_list = async () => {
     loading.value = true
 
     const resp = await fetch('/api/account/list' + (havemore.value ? `?cursor=${morecursor.value}` : ''))
@@ -35,11 +42,16 @@ const fetch_account = async () => {
     loading.value = false
 }
 
+const fetch_account_info = async (event, account) => {
+    if (!event.target.open) return
+    console.log(event, account)
+}
+
 const refresh = async () => {
     accounts.value = []
     havemore.value = false
     morecursor.value = ''
-    await fetch_account()
+    await fetch_account_list()
 }
 
 onMounted(refresh)
@@ -51,9 +63,15 @@ onMounted(refresh)
             <button type="button">添加账号</button>
             <button type="button" @click="refresh">刷新</button>
             <div class="whitespace" />
+            <input type="text" placeholder="查找" v-model="filter" />
+            <div class="whitespace" />
             <button type="button" @click="logout">登出</button>
         </div>
-        <div id="account-list"></div>
+        <div id="account-list">
+            <details v-for="account in filtered_accounts" :key="account" @toggle="fetch_account_info($event, account)">
+                <summary>{{ account }}</summary>
+            </details>
+        </div>
     </div>
 </template>
 
@@ -87,5 +105,31 @@ onMounted(refresh)
     flex: 1;
     overflow-x: hidden;
     overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+#account-list details {
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #ffffff;
+    height: fit-content;
+    transition: all 0.3s ease;
+}
+
+#account-list summary {
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+}
+
+.account-details {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px collapse #eeeeee;
+    color: #666666;
 }
 </style>
