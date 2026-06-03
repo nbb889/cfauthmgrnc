@@ -21,3 +21,8 @@
 
 > - jwt_secret: 用于加密 token 的密钥
 > - password: 后台登录密码
+
+## 功能支持
+
+- 用户名与密码存储
+- TOTP 生成
