@@ -3,6 +3,7 @@ document.title = '正在加载...'
 
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import toast from '@/toast.js'
 
 const wait_backend_ack = ref(true)
 const backend_is_ok = ref(false)
@@ -28,6 +29,7 @@ onMounted(async () => {
 
     try {
         const resp = await fetch('/api/auth/status')
+        toast(await resp.text())
 
         if (!resp.ok) {
             router.push({ name: 'login' })
