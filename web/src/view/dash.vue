@@ -71,6 +71,9 @@ onMounted(refresh)
             <details v-for="account in filtered_accounts" :key="account" @toggle="fetch_account_info($event, account)">
                 <summary>{{ account }}</summary>
             </details>
+            <div v-if="havemore" id="loadmore-container">
+                <button type="button" @click="fetch_account_list">加载更多</button>
+            </div>
         </div>
     </div>
 </template>
@@ -91,10 +94,6 @@ onMounted(refresh)
     column-gap: 5px;
 }
 
-#top-btns button {
-    cursor: pointer;
-}
-
 #top-btns .whitespace {
     flex: 1;
 }
@@ -110,6 +109,10 @@ onMounted(refresh)
     gap: 10px;
 }
 
+#account-list * {
+    height: min-content;
+}
+
 #account-list details {
     border: 1px solid #dddddd;
     border-radius: 4px;
@@ -121,7 +124,6 @@ onMounted(refresh)
 
 #account-list summary {
     font-weight: bold;
-    cursor: pointer;
     outline: none;
     user-select: none;
 }
@@ -131,5 +133,11 @@ onMounted(refresh)
     padding-top: 10px;
     border-top: 1px collapse #eeeeee;
     color: #666666;
+}
+
+#loadmore-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>

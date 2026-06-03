@@ -66,6 +66,5 @@ import modal from '@/components/modal.vue'
 #form-submit {
     width: 100%;
     margin: 2px 0;
-    cursor: pointer;
 }
 </style>
