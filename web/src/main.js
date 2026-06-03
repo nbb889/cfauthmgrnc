@@ -8,5 +8,8 @@ app.use(createPinia())
 import router from '@/router.js'
 app.use(router)
 
+import vloading from '@/vloading.js'
+app.directive('loading', vloading)
+
 import '@/global.css'
 app.mount('#app')
