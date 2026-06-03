@@ -36,6 +36,9 @@ api.get('/ping', (req, res) => {
 import auth from './apis/auth.js'
 api.use('/auth', auth)
 
+import account from './apis/account.js'
+api.use('/account', account)
+
 import { createServer, get } from 'node:http'
 import { httpServerHandler } from 'cloudflare:node'
 const server = createServer(app)
