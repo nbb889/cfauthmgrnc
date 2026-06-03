@@ -22,7 +22,7 @@ onMounted(async () => {
     }
 })
 
-import modal from './components/modal.vue'
+import modal from '@/components/modal.vue'
 </script>
 
 <template>
