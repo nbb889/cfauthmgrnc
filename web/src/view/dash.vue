@@ -170,6 +170,7 @@ import totp from '@/components/totp.vue'
             <button type="button" @click="logout">登出</button>
         </div>
         <div id="account-list">
+            <div id="account-list-wrapper"></div>
             <details v-for="account in filtered_accounts" :key="account" @toggle="view_account($event, account)">
                 <summary>
                     <div class="summary-content">
@@ -246,16 +247,19 @@ import totp from '@/components/totp.vue'
     flex: 1;
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+#account-list-wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 10px;
 }
 
-#account-list * {
+#account-list-wrapper * {
     height: min-content;
 }
 
-#account-list details {
+#account-list-wrapper details {
     border: 1px solid #d8d8d8;
     border-radius: 4px;
     padding: 10px;
@@ -263,23 +267,23 @@ import totp from '@/components/totp.vue'
     transition: all 0.3s ease;
 }
 
-#account-list summary {
+#account-list-wrapper summary {
     font-weight: bold;
     outline: none;
     user-select: none;
 }
 
-#account-list .summary-content {
+#account-list-wrapper .summary-content {
     display: inline-flex;
     align-items: center;
     column-gap: 5px;
 }
 
-#account-list .account-details {
+#account-list-wrapper .account-details {
     margin-top: 10px;
 }
 
-#account-list .account-details code {
+#account-list-wrapper .account-details code {
     float: right;
     font-size: large;
 }
