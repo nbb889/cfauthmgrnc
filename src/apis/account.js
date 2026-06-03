@@ -55,4 +55,14 @@ account.post('/set', needauth, async (req, res) => {
     return res.status(200).send('设置成功')
 })
 
+account.get('/del', needauth, async (req, res) => {
+    const name = req.query.name
+    if (typeof name !== 'string' || name === '') {
+        return res.status(400).send('请求错误')
+    }
+
+    await env.data.delete(name)
+    return res.status(200).send('删除成功')
+})
+
 export default account

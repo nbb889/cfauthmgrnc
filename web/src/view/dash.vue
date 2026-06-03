@@ -51,9 +51,14 @@ const fetch_account_list = async () => {
     loading.value = false
 }
 
-const fetch_account_info = async (event, account) => {
-    if (!event.target.open) return
-    console.log(event, account)
+const fetch_account_info = async account => {
+    loading.value = true
+
+    const resp = await fetch(`/api/account/info?name=${account}`)
+    form_name.value = account
+    Object.assign(form_data, await resp.json())
+
+    loading.value = false
 }
 
 const set_account_info = async () => {
@@ -86,6 +91,26 @@ const add_account = () => {
     })
 
     in_editor.value = true
+}
+
+const view_account = async (event, account) => {
+    if (!event.target.open) return
+    await fetch_account_info(account)
+}
+
+const edit_account = async account => {
+    await fetch_account_info(account)
+    in_editor.value = true
+}
+
+const del_account = async account => {
+    loading.value = true
+
+    const resp = await fetch(`/api/account/del?name=${account}`)
+    toast(await resp.text())
+
+    loading.value = false
+    await refresh()
 }
 
 const refresh = async () => {
@@ -144,8 +169,17 @@ import modal from '@/components/modal.vue'
             <button type="button" @click="logout">登出</button>
         </div>
         <div id="account-list">
-            <details v-for="account in filtered_accounts" :key="account" @toggle="fetch_account_info($event, account)">
-                <summary>{{ account }}</summary>
+            <details v-for="account in filtered_accounts" :key="account" @toggle="view_account($event, account)">
+                <summary>
+                    <div class="summary-content">
+                        <span>{{ account }}</span>
+                        <button type="button" @click="edit_account(account)">编辑</button>
+                        <button type="button" @click="del_account(account)">删除</button>
+                    </div>
+                </summary>
+                <div class="account-details">
+                    {{ account }}
+                </div>
             </details>
             <div v-if="havemore" id="loadmore-container">
                 <button type="button" @click="fetch_account_list">加载更多</button>
@@ -206,10 +240,9 @@ import modal from '@/components/modal.vue'
 }
 
 #account-list details {
-    border: 1px solid #dddddd;
+    border: 1px solid #d8d8d8;
     border-radius: 4px;
     padding: 10px;
-    background-color: #ffffff;
     height: fit-content;
     transition: all 0.3s ease;
 }
@@ -220,11 +253,14 @@ import modal from '@/components/modal.vue'
     user-select: none;
 }
 
-.account-details {
+#account-list .summary-content {
+    display: inline-flex;
+    align-items: center;
+    column-gap: 5px;
+}
+
+#account-list .account-details {
     margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px collapse #eeeeee;
-    color: #666666;
 }
 
 #loadmore-container {
