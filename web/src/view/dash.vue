@@ -123,6 +123,7 @@ const refresh = async () => {
 onMounted(refresh)
 
 import modal from '@/components/modal.vue'
+import totp from '@/components/totp.vue'
 </script>
 
 <template>
@@ -178,7 +179,22 @@ import modal from '@/components/modal.vue'
                     </div>
                 </summary>
                 <div class="account-details">
-                    {{ account }}
+                    <div>
+                        <span>用户名</span>
+                        <code>{{ form_data.username }}</code>
+                    </div>
+                    <div>
+                        <span>密码</span>
+                        <code>{{ form_data.password }}</code>
+                    </div>
+                    <div>
+                        <span>TOTP</span>
+                        <code><totp :secret="form_data.totp" /></code>
+                    </div>
+                    <div>
+                        <span>备注</span>
+                        <code>{{ form_data.note }}</code>
+                    </div>
                 </div>
             </details>
             <div v-if="havemore" id="loadmore-container">
@@ -261,6 +277,11 @@ import modal from '@/components/modal.vue'
 
 #account-list .account-details {
     margin-top: 10px;
+}
+
+#account-list .account-details code {
+    float: right;
+    font-size: large;
 }
 
 #loadmore-container {
