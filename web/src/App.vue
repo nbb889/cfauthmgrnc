@@ -21,44 +21,24 @@ onMounted(async () => {
         wait_backend_ack.value = false
     }
 })
+
+import modal from './components/modal.vue'
 </script>
 
 <template>
     <router-view v-if="backend_is_ok" />
-    <div v-else class="container">
-        <div class="modal">
+    <modal v-else>
+        <template #title>
             <span class="modal-title">后端配置验证器</span>
+        </template>
+        <template #content>
             <span v-if="wait_backend_ack">正在验证后端配置...</span>
             <div v-else>
                 <span v-if="backend_is_ok">后端配置成功, 正在加载...</span>
                 <span v-else>后端返回了错误: {{ backend_error }}</span>
             </div>
-        </div>
-    </div>
+        </template>
+    </modal>
 </template>
 
-<style scoped>
-.container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal {
-    border: 1px solid black;
-    padding: 10px;
-    position: relative;
-    min-width: 250px;
-}
-
-.modal-title {
-    position: absolute;
-    top: 0;
-    left: 5px;
-    transform: translateY(-50%);
-    padding: 0 5px;
-    background-color: white;
-}
-</style>
+<style scoped></style>
