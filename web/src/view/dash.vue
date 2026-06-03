@@ -28,7 +28,7 @@ const fetch_account = async () => {
     const resp = await fetch('/api/account/list' + (havemore.value ? `?cursor=${morecursor.value}` : ''))
     const data = await resp.json()
 
-    accounts.value = data.accounts
+    accounts.value.push(...data.accounts)
     havemore.value = data.havemore
     morecursor.value = data.morecursor
 
