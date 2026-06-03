@@ -170,36 +170,37 @@ import totp from '@/components/totp.vue'
             <button type="button" @click="logout">登出</button>
         </div>
         <div id="account-list">
-            <div id="account-list-wrapper"></div>
-            <details v-for="account in filtered_accounts" :key="account" @toggle="view_account($event, account)">
-                <summary>
-                    <div class="summary-content">
-                        <span>{{ account }}</span>
-                        <button type="button" @click="edit_account(account)">编辑</button>
-                        <button type="button" @click="del_account(account)">删除</button>
+            <div id="account-list-wrapper">
+                <details v-for="account in filtered_accounts" :key="account" @toggle="view_account($event, account)">
+                    <summary>
+                        <div class="summary-content">
+                            <span>{{ account }}</span>
+                            <button type="button" @click="edit_account(account)">编辑</button>
+                            <button type="button" @click="del_account(account)">删除</button>
+                        </div>
+                    </summary>
+                    <div class="account-details">
+                        <div>
+                            <span>用户名</span>
+                            <code>{{ form_data.username }}</code>
+                        </div>
+                        <div>
+                            <span>密码</span>
+                            <code>{{ form_data.password }}</code>
+                        </div>
+                        <div>
+                            <span>TOTP</span>
+                            <code><totp :secret="form_data.totp" /></code>
+                        </div>
+                        <div>
+                            <span>备注</span>
+                            <code>{{ form_data.note }}</code>
+                        </div>
                     </div>
-                </summary>
-                <div class="account-details">
-                    <div>
-                        <span>用户名</span>
-                        <code>{{ form_data.username }}</code>
-                    </div>
-                    <div>
-                        <span>密码</span>
-                        <code>{{ form_data.password }}</code>
-                    </div>
-                    <div>
-                        <span>TOTP</span>
-                        <code><totp :secret="form_data.totp" /></code>
-                    </div>
-                    <div>
-                        <span>备注</span>
-                        <code>{{ form_data.note }}</code>
-                    </div>
+                </details>
+                <div v-if="havemore" id="loadmore-container">
+                    <button type="button" @click="fetch_account_list">加载更多</button>
                 </div>
-            </details>
-            <div v-if="havemore" id="loadmore-container">
-                <button type="button" @click="fetch_account_list">加载更多</button>
             </div>
         </div>
     </div>
